@@ -3,7 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.rfidabsensiperpus.Gui;
-
+import com.mongodb.client.model.Filters;
+import org.bson.conversions.Bson;
+import com.mycompany.rfidabsensiperpus.Objects.GenericDAO;
+import com.mycompany.rfidabsensiperpus.Objects.Mahasiswa;
+import com.mycompany.rfidabsensiperpus.Objects.PetugasPerpus;
+import javax.swing.JOptionPane;
 /**
  *
  * @author ADVAN
@@ -15,6 +20,8 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
     }
 
     /**
@@ -54,7 +61,7 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setBounds(360, 90, 80, 32);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        jLabel2.setText("ID ANGGOTA");
+        jLabel2.setText("USERNAME");
         panel1.add(jLabel2);
         jLabel2.setBounds(200, 150, 90, 14);
 
@@ -127,46 +134,23 @@ public class Login extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void ID_anggotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ID_anggotaActionPerformed
-        String username = ID_anggota.getText(); //ngambil text dari input field
-        
-        if (!username.matches("\\d{8}")) {
-            lblError4.setText("ID anggota harus 8 angka!");
-            return;
-        }
-        
-        //kalau gagal balik, kalau berhasil muncul login berhasil
-        lblError1.setText("");
-        javax.swing.JOptionPane.showMessageDialog(this, "Login berhasil");
+   
     
     }//GEN-LAST:event_ID_anggotaActionPerformed
 
     private void ID_anggotaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ID_anggotaKeyTyped
-        char c = evt.getKeyChar();
 
-        //buat angka aja
-        if (!Character.isDigit(c)) {
-            evt.consume();
-        }
-
-        //maksimal 8 angka
-        if (ID_anggota.getText().length() >=8) {
-            evt.consume();
-        }
                 // TODO add your handling code here:
     }//GEN-LAST:event_ID_anggotaKeyTyped
 
@@ -174,13 +158,20 @@ public class Login extends javax.swing.JFrame {
         String username = ID_anggota.getText();
         String password = new String(txtPassword.getPassword());
         
+        //hapus error lama
+        lblError1.setText("");
+        lblError2.setText("");
+        lblError3.setText("");
+        lblError4.setText("");
+        lblError1.setText("");
+        
         //Validasi jika kosong
         if (username.isEmpty() && password.isEmpty()) {
-            lblError1.setText("Username ID dan password harus diisi!");
+            lblError1.setText("Username dan password harus diisi!");
             return;
         }
         
-        //kalau username id kosong
+        //kalau username kosong
         if (username.isEmpty()) {
             lblError2.setText("Username harus diisi!");
             return;
@@ -193,16 +184,39 @@ public class Login extends javax.swing.JFrame {
             return;
         }
         
-        //validasi usrname id hrus 8 angka
-        if(!username.matches("\\d{8}")) {
-            lblError4.setText("ID anggota harus 8 angka!");
-            return;
+    
+        try {
+            //ambil data dari db
+            GenericDAO<PetugasPerpus> dao =
+                    new GenericDAO<>("petugas", PetugasPerpus.class);
+            
+            Bson filter = Filters.eq("username", username);
+            
+            PetugasPerpus petugas = dao.findOne(filter);
+            
+            //cek user ada atau tidak
+            if (petugas !=null &&
+                password.equals(petugas.getPassword())) {
+                
+                JOptionPane.showMessageDialog(this,
+                    "Login Berhasil, selamat datang"
+                    + petugas.getNamaPetugas());
+        
+                        //pindah dashboard
+                Dashboard db = new Dashboard();
+                db.setVisible(true);
+                
+                this.dispose();
+                
+               
+            } else {
+                lblError5.setText("Username atau password salah!");
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error: " + e.getMessage());
         }
-
-           
-        //kalau semua valid
-        lblError1.setText("");
-        javax.swing.JOptionPane.showMessageDialog(this, "Login berhasil (simulasi)");
      
     }//GEN-LAST:event_MasukActionPerformed
 
