@@ -45,6 +45,7 @@ public class Login extends javax.swing.JFrame {
         lblError3 = new javax.swing.JLabel();
         lblError4 = new javax.swing.JLabel();
         lblError5 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
@@ -130,6 +131,11 @@ public class Login extends javax.swing.JFrame {
         panel1.add(lblError5);
         lblError5.setBounds(400, 280, 190, 20);
 
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Logo/Logo.png"))); // NOI18N
+        jLabel4.setText("jLabel4");
+        panel1.add(jLabel4);
+        jLabel4.setBounds(340, 20, 120, 70);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -199,7 +205,7 @@ public class Login extends javax.swing.JFrame {
                 password.equals(petugas.getPassword())) {
                 
                 JOptionPane.showMessageDialog(this,
-                    "Login Berhasil, selamat datang"
+                    "Login Berhasil, selamat datang "
                     + petugas.getNamaPetugas());
         
                         //pindah dashboard
@@ -271,6 +277,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel lblError1;
     private javax.swing.JLabel lblError2;
     private javax.swing.JLabel lblError3;
