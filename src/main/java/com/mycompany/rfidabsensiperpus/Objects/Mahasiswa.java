@@ -36,8 +36,8 @@ public class Mahasiswa {
         return uidRfid;
     }
     
-    public void setUirfid(String uiRfid) {
-        this.uidRfid = uiRfid;
+    public void setUidRfid(String uidRfid) {
+        this.uidRfid = uidRfid;
     }
     
     public String getIdMahasiswa() {

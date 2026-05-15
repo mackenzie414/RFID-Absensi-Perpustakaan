@@ -4,6 +4,7 @@
  */
 package com.mycompany.rfidabsensiperpus.Objects;
 
+import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -18,19 +19,27 @@ import org.bson.codecs.pojo.PojoCodecProvider;
  */
 public class MongoManager {
     private static MongoClient mongoClient;
+    private static MongoDatabase database;
     private static final String Database_Name = "absensi_perpus";
     
     public static MongoDatabase getDatabase() {
         if (mongoClient == null) {
             CodecRegistry pojoCodecRegistry = CodecRegistries.fromRegistries(
                 MongoClientSettings.getDefaultCodecRegistry(),
-                CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build())
+                CodecRegistries.fromProviders(
+                    PojoCodecProvider.builder().automatic(true).build())
             );
             
-            mongoClient = MongoClients.create("mongodb://localhost:27017");
-            return mongoClient.getDatabase(Database_Name).withCodecRegistry(pojoCodecRegistry);
+            MongoClientSettings settings = MongoClientSettings.builder()
+                    .applyConnectionString(new ConnectionString("mongodb://localhost:27017"))
+                    .codecRegistry(pojoCodecRegistry)
+                    .build();
+            mongoClient = MongoClients.create(settings);
+            
+            database = mongoClient.getDatabase(Database_Name)
+                    .withCodecRegistry(pojoCodecRegistry);
         }
-        return mongoClient.getDatabase(Database_Name);
+        return database;
     }
     
 }
