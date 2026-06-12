@@ -18,6 +18,7 @@ public class GenericDAO<T> implements BaseDAO<T> {
     private final MongoCollection<T> collection;
     private final Class<T> clazz;
     
+    //konstruktor untuk menerima nama koleksi & kelas entitas
     public GenericDAO(String collectionName, Class<T> clazz) {
         this.clazz = clazz;
         this.collection = MongoManager.getDatabase().getCollection(collectionName, clazz);

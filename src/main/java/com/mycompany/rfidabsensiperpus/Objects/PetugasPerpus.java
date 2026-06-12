@@ -4,6 +4,8 @@
  */
 package com.mycompany.rfidabsensiperpus.Objects;
 
+import java.time.LocalDateTime;
+
 /**
  *
  * @author ADVAN
@@ -12,13 +14,15 @@ public class PetugasPerpus {
     private String username;
     private String password;
     private String namaPetugas;
+     private LocalDateTime lastLogin;
     
     public PetugasPerpus() {}
     
-    public PetugasPerpus(String username, String password, String namaPetugas) {
+    public PetugasPerpus(String username, String password, String namaPetugas, LocalDateTime lastLogin) {
         this.username = username;
         this.password = password;
         this.namaPetugas = namaPetugas;
+        this.lastLogin = lastLogin;
     }
     
     //getter dan setter
@@ -28,5 +32,6 @@ public class PetugasPerpus {
     public void setPassword(String password) { this.password = password; }
     public String getNamaPetugas() { return namaPetugas; }
     public void setNamaPetugas(String namaPetugas) { this.namaPetugas = namaPetugas; }
-    
+    public LocalDateTime getLastLogin() {return lastLogin; }
+    public void setLastLogin(LocalDateTime lastLogin) {this.lastLogin = lastLogin; }
 }
