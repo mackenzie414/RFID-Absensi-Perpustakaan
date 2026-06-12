@@ -12,10 +12,11 @@ import org.bson.conversions.Bson;
  * @author acer
  */
 public interface BaseDAO<T> {
+    // untuk crud
     void save(T entity);
     void update(Bson filter, T entity);
     void delete(Bson filter);
-    
+    // untuk mencari
     List<T> findAll();
     T findOne(Bson filter);
     List<T> findMany(Bson filter);

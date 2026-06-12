@@ -10,6 +10,8 @@ import com.mycompany.rfidabsensiperpus.Objects.Mahasiswa;
 import com.mycompany.rfidabsensiperpus.Objects.PetugasPerpus;
 import com.mycompany.rfidabsensiperpus.util.EncryptionUtils;
 import javax.swing.JOptionPane;
+import java.time.LocalDateTime;
+import com.mycompany.rfidabsensiperpus.Utils.SecurityUtils;
 /**
  *
  * @author ADVAN
@@ -189,7 +191,7 @@ public class Login extends javax.swing.JFrame {
         try {
             //ambil data dari db
             GenericDAO<PetugasPerpus> dao =
-                    new GenericDAO<>("petugas", PetugasPerpus.class);
+                    new GenericDAO<>("users", PetugasPerpus.class);
             
             Bson filter = Filters.eq("username", username);
             
@@ -197,6 +199,17 @@ public class Login extends javax.swing.JFrame {
             
             
             //cek user ada atau tidak
+            if (petugas != null &&
+            SecurityUtils.getHash(password, SecurityUtils.SHA_256).equals(petugas.getPassword())) {
+                
+                // Update waktu login terakhir
+                petugas.setLastLogin(LocalDateTime.now());
+
+                // Simpan perubahan ke MongoDB
+                dao.update(
+                    Filters.eq("username", petugas.getUsername()),
+                    petugas
+                );
             if (petugas !=null &&
             EncryptionUtils.encrypt(password).equals(petugas.getPassword())) { 
                 

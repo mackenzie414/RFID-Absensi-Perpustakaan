@@ -23,7 +23,7 @@ public class DataMahasiswa extends javax.swing.JPanel {
         
         this.setBackground(java.awt.Color.RED);
         
-        showData("");
+        showData(""); //menampilkan semua data
     }
 
     /**

@@ -56,58 +56,47 @@ public class MahasiswaService {
     public void tampilMahasiswa(JPanel panelData, String key) {
         List<Mahasiswa> daftarMahasiswa;
         if (key.isEmpty()) {
-            daftarMahasiswa = DAO.findAll();
+            daftarMahasiswa = DAO.findAll(); //ambil data dari database pake generic dao
         } else {
-            daftarMahasiswa = cariMahasiswa(key);
+            daftarMahasiswa = cariMahasiswa(key); //ambil data dari database pake generik dao berdasarkan kata yg diketik
         }
-        panelData.removeAll();
-        
+        panelData.removeAll(); // bersihin panel data sebelum memuat data baru
+        //
         panelData.setBorder(null);
-        
+       
         panelData.setLayout(new BorderLayout());
         
         panelData.setBackground(Color.WHITE);
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        // membuat panel grid untuk menampung card
         JPanel gridPanel = new JPanel(new GridLayout(0, 3, 10, 10));
         gridPanel.setOpaque(false); 
         gridPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
        
-        
+        //cek satu2 data dan nambahin ke panel grid
         try {
             for (Mahasiswa m : daftarMahasiswa){
-                JPanel cardPanel = new JPanel(new GridLayout(4, 1, 0, 0));
-                cardPanel.setBackground(new Color(139, 0, 0));
+                //bikin panel card
+                JPanel cardPanel = new JPanel(new GridLayout(4, 1, 0, 0)); //layout 4 baris 1 kolom
+                cardPanel.setBackground(new Color(139, 0, 0)); //background merah
                 
                 cardPanel.setBorder(BorderFactory.createCompoundBorder(
                         BorderFactory.createLineBorder(Color.WHITE, 1, true),
                         BorderFactory.createEmptyBorder(15, 15, 15, 15)
                 ));
-                
+                //bikin lebel nama & set warna teks
                 JLabel lblNama = new JLabel("Nama: " + m.getNamaLengkap());
                 lblNama.setForeground(Color.WHITE);
-                
-                JLabel lblIDM = new JLabel("ID Karyawan: " + m.getIdMahasiswa());
+                //bikin lebel id & set warna teks
+                JLabel lblIDM = new JLabel("ID Mahasiswa: " + m.getIdMahasiswa());
                 lblIDM.setForeground(Color.WHITE);
-                
+                //bikin lebel prodi & set warna teks
                 JLabel lblProdi = new JLabel("Prodi: " + m.getProdi());
                 lblProdi.setForeground(Color.WHITE);
                 
                 JPanel controlPanel = new JPanel(new GridLayout(1, 2, 20, 15));
                 controlPanel.setBackground(new Color(139, 0, 0));
-                
+                // Aksi tombol Edit dan Delete pada card data mahasiswa
                 JButton tombolEdit = new JButton("Edit");
                 tombolEdit.setBackground(Color.RED);
                 tombolEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -147,16 +136,16 @@ public class MahasiswaService {
                 });
                 controlPanel.add(tombolEdit);
                 controlPanel.add(tombolDelete);
-                
+                 // memasukkan label ke dalam card panel
                 cardPanel.add(lblNama);
                 cardPanel.add(lblIDM);
                 cardPanel.add(lblProdi);
                 cardPanel.add(controlPanel);
-                
+                // memasukkan card panel ke dalam grid panel
                 gridPanel.add(cardPanel);
             }
              panelData.add(gridPanel, BorderLayout.NORTH);
-
+             // refresh panel agar muncul di gui
             panelData.revalidate();
             panelData.repaint();
         } catch (Exception e) {
@@ -166,19 +155,19 @@ public class MahasiswaService {
     
     public List<Mahasiswa> cariMahasiswa(String key) {
         List<Bson> filters = new ArrayList<>();
-        // Get all fields from the Karyawan class
+        // ambil semua fields dari mahasiswa
         for (Field field : Mahasiswa.class.getDeclaredFields()) {
-            // Skip the uidRfid field and non-string fields if necessary
+            
             if (field.getName().equals("uidRfid")) {
                 continue;
             }
             filters.add(Filters.regex(field.getName(), key, "i"));
         }
-        // Search and return Karyawan objects directly
+        // cari dan mengembalikan objek mahasiswa
         List<Mahasiswa> results = DAO.findMany(Filters.or(filters));
         return results;
     }
-    
+    // memperbarui data pake filter bson
     public void updateMahasiswa(Mahasiswa newM) {
         Bson filter = Filters.eq("idMahasiswa", newM.getIdMahasiswa());
         Mahasiswa m = DAO.findOne(filter);
@@ -188,7 +177,7 @@ public class MahasiswaService {
             JOptionPane.showMessageDialog(null, "Data berhasil diperbarui!");
         }
     }
-    
+    // hapus data dari database
     public void hapusMahasiswa(String idM) {
         Bson filter = Filters.eq("idMahasiswa", idM);
         DAO.delete(filter); // Menggunakan deleteOne [6]
