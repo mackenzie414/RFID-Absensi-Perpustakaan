@@ -8,6 +8,7 @@ import org.bson.conversions.Bson;
 import com.mycompany.rfidabsensiperpus.Objects.GenericDAO;
 import com.mycompany.rfidabsensiperpus.Objects.Mahasiswa;
 import com.mycompany.rfidabsensiperpus.Objects.PetugasPerpus;
+import com.mycompany.rfidabsensiperpus.util.EncryptionUtils;
 import javax.swing.JOptionPane;
 import java.time.LocalDateTime;
 import com.mycompany.rfidabsensiperpus.Utils.SecurityUtils;
@@ -196,6 +197,7 @@ public class Login extends javax.swing.JFrame {
             
             PetugasPerpus petugas = dao.findOne(filter);
             
+            
             //cek user ada atau tidak
             if (petugas != null &&
             SecurityUtils.getHash(password, SecurityUtils.SHA_256).equals(petugas.getPassword())) {
@@ -208,6 +210,8 @@ public class Login extends javax.swing.JFrame {
                     Filters.eq("username", petugas.getUsername()),
                     petugas
                 );
+            if (petugas !=null &&
+            EncryptionUtils.encrypt(password).equals(petugas.getPassword())) { 
                 
                 JOptionPane.showMessageDialog(this,
                     "Login Berhasil, selamat datang "
@@ -244,6 +248,9 @@ public class Login extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        System.out.println("LOGIN KE JALAN");
+        new Login().setVisible(true);
+        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
