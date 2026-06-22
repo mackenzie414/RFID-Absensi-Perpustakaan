@@ -189,49 +189,43 @@ public class Login extends javax.swing.JFrame {
         
     
         try {
-            //ambil data dari db
-            GenericDAO<PetugasPerpus> dao =
-                    new GenericDAO<>("users", PetugasPerpus.class);
-            
-            Bson filter = Filters.eq("username", username);
-            
-            PetugasPerpus petugas = dao.findOne(filter);
-            
-            
-            //cek user ada atau tidak
-            if (petugas != null &&
-            SecurityUtils.getHash(password, SecurityUtils.SHA_256).equals(petugas.getPassword())) {
-                
-                // Update waktu login terakhir
-                petugas.setLastLogin(LocalDateTime.now());
+    GenericDAO<PetugasPerpus> dao =
+            new GenericDAO<>("users", PetugasPerpus.class);
 
-                // Simpan perubahan ke MongoDB
-                dao.update(
-                    Filters.eq("username", petugas.getUsername()),
-                    petugas
-                );
-            if (petugas !=null &&
-            EncryptionUtils.encrypt(password).equals(petugas.getPassword())) { 
-                
-                JOptionPane.showMessageDialog(this,
-                    "Login Berhasil, selamat datang "
-                    + petugas.getNamaPetugas());
-        
-                        //pindah dashboard
-                Dashboard db = new Dashboard();
-                db.setVisible(true);
-                
-                this.dispose();
-                
-               
-            } else {
-                lblError5.setText("Username atau password salah!");
-            }
-            
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,
-                    "Error: " + e.getMessage());
-        }
+    Bson filter = Filters.eq("username", username);
+
+    PetugasPerpus petugas = dao.findOne(filter);
+
+    if (petugas != null &&
+        SecurityUtils.getHash(password, SecurityUtils.SHA_256)
+                .equals(petugas.getPassword())) {
+
+        petugas.setLastLogin(LocalDateTime.now());
+
+        dao.update(
+            Filters.eq("username", petugas.getUsername()),
+            petugas
+        );
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Login Berhasil, selamat datang "
+                + petugas.getNamaPetugas());
+
+        Dashboard db = new Dashboard();
+        db.setVisible(true);
+
+        this.dispose();
+
+    } else {
+        lblError5.setText("Username atau password salah!");
+    }
+
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(
+            this,
+            "Error: " + e.getMessage());
+}
      
     }//GEN-LAST:event_MasukActionPerformed
 
