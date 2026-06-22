@@ -167,6 +167,11 @@ public class MahasiswaService {
         List<Mahasiswa> results = DAO.findMany(Filters.or(filters));
         return results;
     }
+    
+    public Mahasiswa findByUid(String hashedUid) {
+        Bson filter = com.mongodb.client.model.Filters.eq("uidRfid", hashedUid);
+        return DAO.findOne(filter);
+    }
     // memperbarui data pake filter bson
     public void updateMahasiswa(Mahasiswa newM) {
         Bson filter = Filters.eq("idMahasiswa", newM.getIdMahasiswa());
